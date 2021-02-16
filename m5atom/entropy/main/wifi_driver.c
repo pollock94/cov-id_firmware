@@ -16,7 +16,7 @@
 #include "tcpip_adapter.h"
 #include "custom_list.h"
 #include "MessageQueue.h"
-
+#include "https_manager.h"
 
 #define WIFI_DISCONNET_EVENT_BIT        ( 1UL << 8UL)
 #define WIFI_CONNET_EVENT_BIT           ( 1UL << 7UL)
@@ -61,8 +61,15 @@ int wifi_get_rssi()
 
 static void wifi_event_callback(void *msg)
 {
+	int wifi_stat = *((int*)msg);
 
-  ESP_LOGI(TAG, "ID received %d", *((int*)msg));
+  ESP_LOGI(TAG, "ID received %d", wifi_stat);
+
+  if(wifi_stat == 128)
+  {
+	  char bearer_buff[100];
+	  https_get_bearer_token(bearer_buff);
+  }
 }
 
 static void wifi_restart()

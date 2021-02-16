@@ -20,7 +20,7 @@
 #define OAUTH_GRANT_TYPE 			//CONFIG_OAUTH_GRANT_TYPE
 #define OAUTH_SCOPE 				//CONFIG_OAUTH_SCOPE
 #define OAUTH_USER_TYPE 			//CONFIG_OAUTH_USER_TYPE
-#define OAUTH_PATH 					"/example"//CONFIG_OAUTH_PATH
+#define OAUTH_PATH 					"/api/v1/readings"//CONFIG_OAUTH_PATH
 
 void https_get_bearer_token(char bearer_buff[]);
 void https_get_request(char* _url, char* _oauth_bearer_token); //#TODO HTTPS_MANAGER_POST_REQ

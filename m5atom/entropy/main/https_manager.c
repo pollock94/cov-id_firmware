@@ -38,6 +38,10 @@
 
 static const char *TAG = "HTTPS_MANAGER";
 
+
+//temp
+static const char *bearer_token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjllZmU0MTY0NWY0Y2VmMmM1ZjY3MjI5ZGMzNzA5MDczYTUwZDBiMjgyNmM5MzBiNDIyZjFkYjY1YmI3Njc1ZWNlOTAyNmMxNGYwMjhhNDdmIn0.eyJhdWQiOiIyIiwianRpIjoiOWVmZTQxNjQ1ZjRjZWYyYzVmNjcyMjlkYzM3MDkwNzNhNTBkMGIyODI2YzkzMGI0MjJmMWRiNjViYjc2NzVlY2U5MDI2YzE0ZjAyOGE0N2YiLCJpYXQiOjE2MTM0OTg0MDAsIm5iZiI6MTYxMzQ5ODQwMCwiZXhwIjoxNjQ1MDM0NDAwLCJzdWIiOiIxX3Rlcm1pbmFsIiwic2NvcGVzIjpbIioiXX0.qKar9cVH2oasJmI5xCqFsdMMGkAH-PCcEK2zYtdJycJbcUHU2HghUxhwnln0QDOy1lvSVHheLReaLL8GL30FJe72b3YeBqTn8z-oSsaY-nCBsmwugHlYPWY4jpkDFeX4Z0X6UqOEczB25XMjX22c94loIyaa6fO_WB7JX9QWoi0941BvCwqRqZmdcDRjrHmQBtfRLDS0QiuaO3F6QgxLh792L0_wwXEzMYp0uTj-iVtjyMmYbbyoqyWOi9S1PXR9_LYjvLUyacGXMxCbk0dowF55ww46AuNge6jcyLEeKugp6WmZvsL9YcZWIUGdoi-j3BV2OZSGqeqwro5HfTBppoCOwp5U9_qGGjuyAtlS_FHLKw8lYckDdrtE9jJv2mUtjsiwE2lfYQJaBsje7njKSGLFagMYXuGEtmAUVL1Yw5Hp5YNpZOdUjCL2KopheEauFiycsi6QRkGfKp_ffXufoCZ8dzp_L_kPeKfw4-TgdlQTPPFNRJ6_sAB-NjbTZ8rfT7l0MSIX_xC-kvebrEpx9Z8J_mUdEMgskfwgg7PImXvQj6spvfLC-LMl1n1020443OI54vvs7bH-hV7nnkEM4_A3HwHAGsolrlUA8h9qYVGf0U4LqRiKIqPd_N62j1H8ZhAZO87JR8OEXYRVeh08n7JUlKSiTJHEzPou4dg5rYo";
+
 void https_get_bearer_token(char bearer_buff[])
 {
 #ifdef HTTPS_DEBUG
@@ -52,9 +56,9 @@ void https_get_bearer_token(char bearer_buff[])
 //		c1.user_type = OAUTH_USER_TYPE;
 //		c1.password = OAUTH_PASSWORD;
 //
-		char *_postdata = " ";// = json_oauth_credentials_body_generator(&c1);
+		char *_postdata = "{\"temperature\": 36.6,\"person\": \"LSNAOJF\"}";// = json_oauth_credentials_body_generator(&c1);
 
-
+//"{\"temperature\": 37.5,\"person\": \"LSNAOJF\"}"
 
 	char *oauth_credentials_buffer = malloc((BEARER_BUFFER_SIZE)*sizeof(char));
 	//maybe return successful or not
@@ -69,6 +73,7 @@ void https_get_bearer_token(char bearer_buff[])
     esp_http_client_set_method(client, HTTP_METHOD_POST);
     esp_http_client_set_post_field(client, _postdata, strlen(_postdata));
     esp_http_client_set_header(client, "Content-Type", "application/json");
+    esp_http_client_set_header(client, "Authorization", bearer_token);
 
     err = esp_http_client_open(client, strlen(_postdata));
         if (err != ESP_OK) {
