@@ -52,7 +52,7 @@ static void uart_event_task(void *pvParameters)
                     uart_read_bytes(MAIN_UART, dtmp, event.size, portMAX_DELAY);
                     uart_write_bytes(MAIN_UART, (const char*) dtmp, event.size);
 #ifdef UART_DEBUG
-                    ESP_LOGI(TAG, "DTMP DATA: %c\r\n", *(dtmp));
+                    ESP_LOGI(TAG, "DTMP DATA: %s\r\n", dtmp);
                   //  ESP_LOGI(TAG, "DTMP HEX: %x\r\n", *(dtmp+1));
 #endif
 
@@ -128,7 +128,7 @@ void uart_main_init(void) {
     const uart_config_t uart_config = {
         .baud_rate = BAUD_RATE,
         .data_bits = UART_DATA_8_BITS,
-        .parity = UART_PARITY_EVEN,
+        .parity = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE
     };
