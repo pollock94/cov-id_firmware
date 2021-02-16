@@ -52,8 +52,8 @@ static void uart_event_task(void *pvParameters)
                     uart_read_bytes(MAIN_UART, dtmp, event.size, portMAX_DELAY);
                     uart_write_bytes(MAIN_UART, (const char*) dtmp, event.size);
 #ifdef UART_DEBUG
-                    ESP_LOGI(TAG, "DTMP HEX: %x\r\n", *dtmp);
-                    ESP_LOGI(TAG, "DTMP HEX: %x\r\n", *(dtmp+1));
+                    ESP_LOGI(TAG, "DTMP DATA: %c\r\n", *(dtmp));
+                  //  ESP_LOGI(TAG, "DTMP HEX: %x\r\n", *(dtmp+1));
 #endif
 
                     uint8_t cVal = 0;
@@ -65,15 +65,14 @@ static void uart_event_task(void *pvParameters)
 			    ESP_LOGI(TAG, "Validated Bill. Event Size: %d\r\n", event.size);
 #endif
 			    cVal = (uint8_t) *(dtmp + 1);
-			    if (MessageQueue_IsValid ())
-			      {
-				msg_t *m = (msg_t*) heap_caps_malloc (
-				    sizeof(msg_t), MALLOC_CAP_DEFAULT);
-				m->src = uart;
-				m->msg = (void*) &cVal;
-				MessageQueue_Send (m);
-				heap_caps_free (m);
-			      }
+						if (MessageQueue_IsValid()) {
+							msg_t *m = (msg_t*) heap_caps_malloc(sizeof(msg_t),
+									MALLOC_CAP_DEFAULT);
+							m->src = uart;
+							m->msg = (void*) &cVal;
+							MessageQueue_Send(m);
+							heap_caps_free(m);
+						}
 			  }
 		      }
                     break;
@@ -137,5 +136,5 @@ void uart_main_init(void) {
     ESP_ERROR_CHECK(uart_set_pin(MAIN_UART, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
     // We won't use a buffer for sending data.
     ESP_ERROR_CHECK(uart_driver_install(MAIN_UART, RX_BUF_SIZE, 0, 20, &main_uart_queue, 0));
-    xTaskCreatePinnedToCore(uart_event_task, "uart_event_task", 1024*4, NULL, configMAX_PRIORITIES-1, NULL, 0); //#TODO Review the Priorities
+    xTaskCreate(uart_event_task, "uart_event_task", 1024*4, NULL, configMAX_PRIORITIES-1, NULL); //#TODO Review the Priorities
 }

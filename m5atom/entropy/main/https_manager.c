@@ -7,7 +7,6 @@
 
 
 #include "https_manager.h"
-#include "../inc/json_parser.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
@@ -25,8 +24,7 @@
 #include "lwip/dns.h"
 #include "esp_http_client.h"
 #include "esp_tls.h"
-#include "datamodel.h"
-#include "credentials.h"
+
 
 
 /* NOTE:
@@ -45,16 +43,16 @@ void https_get_bearer_token(char bearer_buff[])
 #ifdef HTTPS_DEBUG
 	    ESP_LOGI(TAG, "GETTING OAUTH BEARER TOKEN\r\n");
 #endif
-		oauthCred c1;
-		c1.client_id = OAUTH_CLIENT_ID;
-		c1.client_secret = OAUTH_CLIENT_SECRET;
-		c1.grant_type = OAUTH_GRANT_TYPE;
-		c1.scope = OAUTH_SCOPE;
-		c1.username = OAUTH_USER;
-		c1.user_type = OAUTH_USER_TYPE;
-		c1.password = OAUTH_PASSWORD;
-
-		char *_postdata = json_oauth_credentials_body_generator(&c1);
+//		oauthCred c1;
+//		c1.client_id = OAUTH_CLIENT_ID;
+//		c1.client_secret = OAUTH_CLIENT_SECRET;
+//		c1.grant_type = OAUTH_GRANT_TYPE;
+//		c1.scope = OAUTH_SCOPE;
+//		c1.username = OAUTH_USER;
+//		c1.user_type = OAUTH_USER_TYPE;
+//		c1.password = OAUTH_PASSWORD;
+//
+		char *_postdata = " ";// = json_oauth_credentials_body_generator(&c1);
 
 
 
@@ -100,22 +98,22 @@ void https_get_bearer_token(char bearer_buff[])
 
     }
 
-    char* _bearer = json_parser_parse_data(oauth_credentials_buffer, "access_token");
+    //char* _bearer = json_parser_parse_data(oauth_credentials_buffer, "access_token");
     free(oauth_credentials_buffer);
 
     esp_http_client_close(client);
     esp_http_client_cleanup(client);
 
-    char *temp_bearer_token = malloc((BEARER_BUFFER_SIZE)*sizeof(char));
-    snprintf(temp_bearer_token, BEARER_BUFFER_SIZE, "%s", _bearer);
-    snprintf(bearer_buff, 8, "%s", "Bearer ");
-    for (int i = 0; i<strlen(_bearer); i++)
-    {
-	bearer_buff[i+7] = temp_bearer_token[i+1];
-    }
-    bearer_buff[strlen(_bearer)+5] = '\0'; //5 because the 7 offset. counting from 9, it is 6 and subtracting 1 becomes 5
-
-    free(temp_bearer_token);
+//    char *temp_bearer_token = malloc((BEARER_BUFFER_SIZE)*sizeof(char));
+//    snprintf(temp_bearer_token, BEARER_BUFFER_SIZE, "%s", _bearer);
+//    snprintf(bearer_buff, 8, "%s", "Bearer ");
+//    for (int i = 0; i<strlen(_bearer); i++)
+//    {
+//	bearer_buff[i+7] = temp_bearer_token[i+1];
+//    }
+//    bearer_buff[strlen(_bearer)+5] = '\0'; //5 because the 7 offset. counting from 9, it is 6 and subtracting 1 becomes 5
+//
+//    free(temp_bearer_token);
 
 }
 

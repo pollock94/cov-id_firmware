@@ -12,15 +12,15 @@
 #include <stdlib.h>
 
 #define BEARER_BUFFER_SIZE			2048
-#define DF_HOST                         	CONFIG_DF_HOST
-#define OAUTH_USER				CONFIG_OAUTH_USER
-#define OAUTH_PASSWORD				CONFIG_OAUTH_PASSWORD
-#define OAUTH_CLIENT_ID 			CONFIG_OAUTH_CLIENT_ID
-#define OAUTH_CLIENT_SECRET 			CONFIG_OAUTH_SECRET
-#define OAUTH_GRANT_TYPE 			CONFIG_OAUTH_GRANT_TYPE
-#define OAUTH_SCOPE 				CONFIG_OAUTH_SCOPE
-#define OAUTH_USER_TYPE 			CONFIG_OAUTH_USER_TYPE
-#define OAUTH_PATH 				CONFIG_OAUTH_PATH
+#define DF_HOST                     "cov-id.dfnest.com"//CONFIG_DF_HOST
+#define OAUTH_USER					//CONFIG_OAUTH_USER
+#define OAUTH_PASSWORD				//CONFIG_OAUTH_PASSWORD
+#define OAUTH_CLIENT_ID 			//CONFIG_OAUTH_CLIENT_ID
+#define OAUTH_CLIENT_SECRET 			//CONFIG_OAUTH_SECRET
+#define OAUTH_GRANT_TYPE 			//CONFIG_OAUTH_GRANT_TYPE
+#define OAUTH_SCOPE 				//CONFIG_OAUTH_SCOPE
+#define OAUTH_USER_TYPE 			//CONFIG_OAUTH_USER_TYPE
+#define OAUTH_PATH 					"/example"//CONFIG_OAUTH_PATH
 
 void https_get_bearer_token(char bearer_buff[]);
 void https_get_request(char* _url, char* _oauth_bearer_token); //#TODO HTTPS_MANAGER_POST_REQ

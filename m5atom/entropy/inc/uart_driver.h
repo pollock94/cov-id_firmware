@@ -13,8 +13,8 @@
 static const int RX_BUF_SIZE = (1024);
 #define RD_BUF_SIZE (RX_BUF_SIZE)
 
-#define TXD_PIN 			(GPIO_NUM_16)
-#define RXD_PIN 			(GPIO_NUM_17)
+#define TXD_PIN 			(GPIO_NUM_32)
+#define RXD_PIN 			(GPIO_NUM_26)
 #define MAIN_UART 			UART_NUM_2
 #define BAUD_RATE 			(9600)
 #define PATTERN_CHR_NUM    		(3)         /*!< Set the number of consecutive and identical characters received by receiver which defines a UART pattern*/

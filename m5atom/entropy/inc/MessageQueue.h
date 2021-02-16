@@ -19,8 +19,7 @@ typedef void(*msgQueueCallback_t)(void *mMsg);
 typedef enum {
 	sensor = 0,
 	uart,
-	bluetooth,
-	ble_system_activate,
+	wifi,
 	MAX_MSG_SRC
 }msg_src_t;
 
