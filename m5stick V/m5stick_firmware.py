@@ -4,8 +4,15 @@ from Maix import I2S, GPIO
 from board import board_info
 import audio
 import time
+from machine import I2C, UART
+import re
 
+##UART
+fm.register(35, fm.fpioa.UART2_TX, force=True)
+fm.register(34, fm.fpioa.UART2_RX, force=True)
+uart_Port = UART(UART.UART2, 9600,8,0,0, timeout=1000, read_buf_len= 4096)
 
+##UART
 ##audio
 fm.register(board_info.SPK_SD, fm.fpioa.GPIO0)
 spk_sd=GPIO(GPIO.GPIO0, GPIO.OUT)
@@ -68,7 +75,7 @@ sensor.set_pixformat(sensor.RGB565)
 sensor.set_framesize(sensor.QVGA)
 #sensor.set_vflip(1) #added later
 sensor.run(1)
-sensor.skip_frames(30) #added later
+#sensor.skip_frames(20) #added later
 ##LCD CAM
 
 while True:
@@ -83,7 +90,10 @@ while True:
         led_r.value(1)
         led_g.value(0)
         led_b.value(1)
-        print(res[0].payload())
+        data = str(res[0].payload())
+        token = data.split(":")
+        print(token[0])
+        uart_Port.write(token[0])
 
     else:
        # but_a_pressed = 1
