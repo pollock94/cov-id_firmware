@@ -67,8 +67,7 @@ static void wifi_event_callback(void *msg)
 
   if(wifi_stat == 128)
   {
-	  char bearer_buff[100];
-	  https_get_bearer_token(bearer_buff);
+	  //Do something
   }
 }
 

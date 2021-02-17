@@ -15,12 +15,15 @@
 #include "led.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include "json_parser.h"
+#include "https_manager.h"
 
 static const char *TAG = __FILE__;
 
-static void sensor_data_callback(void *msg) {
-	ESP_LOGI(TAG, "FLOAT Val : %lf\r\n", *((float* )msg));
+static void uart_data_callback(void *msg) {
+	ESP_LOGI(TAG, "UART Data : %s\r\n", (char *)msg);
+	https_post_data(json_covid_body_generator((char *)msg , sensor_manager_get_temperature()));
+
 
 }
 
@@ -43,8 +46,8 @@ void app_main()
 	MessageQueue_Init(MSG_QUEUE_LEN);
 	uart_main_init();
 	wifiDriver_init();
-	MessageQueue_RegisterMsg(sensor, sensor_data_callback);
-	//sensor_manager_init();
+	MessageQueue_RegisterMsg(uart, uart_data_callback);
+	sensor_manager_init();
 
 
 

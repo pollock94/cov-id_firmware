@@ -53,28 +53,23 @@ static void uart_event_task(void *pvParameters)
                     uart_write_bytes(MAIN_UART, (const char*) dtmp, event.size);
 #ifdef UART_DEBUG
                     ESP_LOGI(TAG, "DTMP DATA: %s\r\n", dtmp);
-                  //  ESP_LOGI(TAG, "DTMP HEX: %x\r\n", *(dtmp+1));
+
+
 #endif
 
-                    uint8_t cVal = 0;
-		    if (event.size == 2) //Cash signal comes as 2 bytes
-		      {
-			if (*dtmp == ICT_VALIDATED_BILL_SIGNAL)
-			  {
-#ifdef UART_DEBUG
-			    ESP_LOGI(TAG, "Validated Bill. Event Size: %d\r\n", event.size);
-#endif
-			    cVal = (uint8_t) *(dtmp + 1);
-						if (MessageQueue_IsValid()) {
-							msg_t *m = (msg_t*) heap_caps_malloc(sizeof(msg_t),
-									MALLOC_CAP_DEFAULT);
-							m->src = uart;
-							m->msg = (void*) &cVal;
-							MessageQueue_Send(m);
-							heap_caps_free(m);
-						}
-			  }
-		      }
+				if (event.size == 7) //Cash signal comes as 2 bytes
+				{
+					char COVID[10];
+					sprintf(COVID, "%s", dtmp);
+					if (MessageQueue_IsValid()) {
+						msg_t *m = (msg_t*) heap_caps_malloc(sizeof(msg_t),	MALLOC_CAP_DEFAULT);
+						m->src = uart;
+						m->msg = (void*) &COVID;
+						MessageQueue_Send(m);
+						heap_caps_free(m);
+					}
+
+				}
                     break;
                 //Event of HW FIFO overflow detected
                 case UART_FIFO_OVF:

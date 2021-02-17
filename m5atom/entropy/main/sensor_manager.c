@@ -23,7 +23,10 @@ float static_distance_comp = 2.985;
 float filtered_temp_float = 0.0; //static make it and test
 uint8_t filtered_temp_IEEE11073[IEEE_TEMP_BUFF_LEN] = { '\0' }; //static
 
-
+float sensor_manager_get_temperature()
+{
+	return filtered_temp_float;
+}
 
 
 static void temp_data_filter_task(void *param)
@@ -46,13 +49,14 @@ static void temp_data_filter_task(void *param)
 			else
 				Tc_offset = 0.0;
 			filtered_temp_float = filtered_temp_float + Tc_offset;
-            if(MessageQueue_IsValid()){
-            	msg_t *m = (msg_t*) heap_caps_malloc(sizeof(msg_t), MALLOC_CAP_DEFAULT);
-            	m->src = sensor;
-            	m->msg = (void*)&filtered_temp_float;
-            	MessageQueue_Send(m);
-            	heap_caps_free(m);
-            }
+
+//            if(MessageQueue_IsValid()){
+//            	msg_t *m = (msg_t*) heap_caps_malloc(sizeof(msg_t), MALLOC_CAP_DEFAULT);
+//            	m->src = sensor;
+//            	m->msg = (void*)&filtered_temp_float;
+//            	MessageQueue_Send(m);
+//            	heap_caps_free(m);
+//            }
 
 			sample_count = 0;
 		}

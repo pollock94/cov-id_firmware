@@ -13,6 +13,7 @@ set(SOURCES
 "https_manager.c"
 "wifi_driver.c"
 "uart_driver.c"
+"json_parser.c"
 )
 idf_component_register(
         SRCS ${SOURCES}

@@ -22,7 +22,7 @@
 #define OAUTH_USER_TYPE 			//CONFIG_OAUTH_USER_TYPE
 #define OAUTH_PATH 					"/api/v1/readings"//CONFIG_OAUTH_PATH
 
-void https_get_bearer_token(char bearer_buff[]);
+void https_post_data(char *_postdata);
 void https_get_request(char* _url, char* _oauth_bearer_token); //#TODO HTTPS_MANAGER_POST_REQ
 void https_save_bearer_token(); // #TODO HTTP_MANAGER_INIT/ CHANGE WHOLE MODULE NAME
 

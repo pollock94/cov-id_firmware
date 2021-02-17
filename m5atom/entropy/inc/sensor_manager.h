@@ -19,6 +19,7 @@
 #define BODY_TEMPERATURE_MAX		40.0
 #define BODY_TEMPERATURE_MIN		30.0
 void sensor_manager_init(void);
+float sensor_manager_get_temperature(void);
 
 
 #endif /* INC_SENSOR_MANAGER_H_ */
