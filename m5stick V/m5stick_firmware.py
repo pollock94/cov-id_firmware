@@ -5,7 +5,47 @@ from board import board_info
 import audio
 import time
 from machine import I2C, UART
-import re
+import KPU as kpu
+#import gc, sys
+
+
+#face Detect
+# main( model_addr=0x300000)
+def face_detect():
+    model_addr=0x300000
+    sensor.set_hmirror(False)
+    sensor.set_vflip(False)
+    anchors = (1.889, 2.5245, 2.9465, 3.94056, 3.99987, 5.3658, 5.155437, 6.92275, 6.718375, 9.01025)
+    print("Detecting faces")
+    try:
+        task = None
+        task = kpu.load(model_addr)
+        kpu.init_yolo2(task, 0.5, 0.3, 5, anchors) # threshold:[0,1], nms_value: [0, 1]
+        while(True):
+            img = sensor.snapshot()
+            t = time.ticks_ms()
+            objects = kpu.run_yolo2(task, img)
+            t = time.ticks_ms() - t
+            if objects:
+                for obj in objects:
+                    print("object found!")
+                    img.draw_rectangle(obj.rect())
+                    play_wav("beep.wav")
+                    led_w.value(1)
+                    led_r.value(1)
+                    led_g.value(1)
+                    led_b.value(0)
+                    time.sleep_ms(200)
+
+                break
+
+            lcd.display(img)
+    except Exception as e:
+        raise e
+    finally:
+        if not task is None:
+            kpu.deinit(task)
+
 
 ##UART
 fm.register(35, fm.fpioa.UART2_TX, force=True)
@@ -92,6 +132,13 @@ while True:
         led_b.value(1)
         data = str(res[0].payload())
         token = data.split(":")
+        print(token[0])
+        time.sleep_ms(200)
+        led_w.value(1)
+        led_r.value(1)
+        led_g.value(1)
+        led_b.value(1)
+        face_detect()
         print(token[0])
         uart_Port.write(token[0])
 
