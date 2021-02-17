@@ -142,7 +142,7 @@ sensor.run(1)
 
 model_addr=0x300000
 iterator = 0
-
+cov_id = '\0'
 while True:
     clock.tick()
     img=sensor.snapshot()
@@ -154,10 +154,9 @@ while True:
             data = str(res[0].payload())
             token = data.split(":")
             print(token[0])
+            cov_id = token[0]
             iterator = 1
 
-            print(token[0])
-            uart_Port.write(token[0])
 
         else:
             hmi(2)
@@ -178,6 +177,7 @@ while True:
                     print("object found!")
                     img.draw_rectangle(obj.rect())
                     hmi(1)
+                    uart_Port.write(cov_id)
                     iterator = 0
 
         except Exception as e:
