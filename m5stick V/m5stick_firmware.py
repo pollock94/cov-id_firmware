@@ -8,13 +8,40 @@ from machine import I2C, UART
 import KPU as kpu
 #import gc, sys
 
+def hmi(color):
+    if color == 0:
+        play_wav("beep.wav")
+        led_w.value(1)
+        led_r.value(1)
+        led_g.value(0)
+        led_b.value(1)
+        time.sleep_ms(200)
+        led_w.value(1)
+        led_r.value(1)
+        led_g.value(1)
+        led_b.value(1)
+    elif color == 1:
+        play_wav("beep.wav")
+        led_w.value(1)
+        led_r.value(1)
+        led_g.value(1)
+        led_b.value(0)
+        time.sleep_ms(300)
+    elif color == 2:
+        led_w.value(1)
+        led_r.value(1)
+        led_g.value(1)
+        led_b.value(1)
+
+
+
 
 #face Detect
 # main( model_addr=0x300000)
 def face_detect():
     model_addr=0x300000
-    sensor.set_hmirror(False)
-    sensor.set_vflip(False)
+    #sensor.set_hmirror(False)
+    #sensor.set_vflip(False)
     anchors = (1.889, 2.5245, 2.9465, 3.94056, 3.99987, 5.3658, 5.155437, 6.92275, 6.718375, 9.01025)
     print("Detecting faces")
     try:
@@ -30,12 +57,7 @@ def face_detect():
                 for obj in objects:
                     print("object found!")
                     img.draw_rectangle(obj.rect())
-                    play_wav("beep.wav")
-                    led_w.value(1)
-                    led_r.value(1)
-                    led_g.value(1)
-                    led_b.value(0)
-                    time.sleep_ms(200)
+                    hmi(1)
 
                 break
 
@@ -118,35 +140,53 @@ sensor.run(1)
 #sensor.skip_frames(20) #added later
 ##LCD CAM
 
+model_addr=0x300000
+iterator = 0
+
 while True:
     clock.tick()
     img=sensor.snapshot()
-    res = img.find_qrcodes()
+
+    if iterator == 0:
+        res = img.find_qrcodes()
+        if len(res) > 0:
+            hmi(0)
+            data = str(res[0].payload())
+            token = data.split(":")
+            print(token[0])
+            iterator = 1
+
+            print(token[0])
+            uart_Port.write(token[0])
+
+        else:
+            hmi(2)
+
+    elif iterator == 1:
+        anchors = (1.889, 2.5245, 2.9465, 3.94056, 3.99987, 5.3658, 5.155437, 6.92275, 6.718375, 9.01025)
+        print("Detecting faces")
+        try:
+            task = None
+            task = kpu.load(model_addr)
+            kpu.init_yolo2(task, 0.5, 0.3, 5, anchors) # threshold:[0,1], nms_value: [0, 1]
+
+            t = time.ticks_ms()
+            objects = kpu.run_yolo2(task, img)
+            t = time.ticks_ms() - t
+            if objects:
+                for obj in objects:
+                    print("object found!")
+                    img.draw_rectangle(obj.rect())
+                    hmi(1)
+                    iterator = 0
+
+        except Exception as e:
+            raise e
+        finally:
+            if not task is None:
+                kpu.deinit(task)
 
 
-    if len(res) > 0:
-        play_wav("beep.wav")
-        led_w.value(1)
-        led_r.value(1)
-        led_g.value(0)
-        led_b.value(1)
-        data = str(res[0].payload())
-        token = data.split(":")
-        print(token[0])
-        time.sleep_ms(200)
-        led_w.value(1)
-        led_r.value(1)
-        led_g.value(1)
-        led_b.value(1)
-        face_detect()
-        print(token[0])
-        uart_Port.write(token[0])
 
-    else:
-       # but_a_pressed = 1
-        led_w.value(1)
-        led_r.value(1)
-        led_g.value(1)
-        led_b.value(1)
 
     lcd.display(img)
