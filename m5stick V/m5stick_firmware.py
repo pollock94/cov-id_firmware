@@ -178,6 +178,7 @@ while True:
                     img.draw_rectangle(obj.rect())
                     hmi(1)
                     uart_Port.write(cov_id)
+                    print(cov_id)
                     iterator = 0
 
         except Exception as e:
